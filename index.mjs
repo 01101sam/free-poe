@@ -12,7 +12,7 @@ import fs from "fs";
         result = await poe.sendEmailCode(email);
         if (!result) {
             console.log(`Failed to send email code.`);
-
+            continue;
         }
         console.log(`Getting OTP...`);
         const otp = await poe.getEmailCode(email);
@@ -21,31 +21,36 @@ import fs from "fs";
         result = await poe.verifyEmailCode(email, otp);
         if (!result) {
             console.log(`Failed to verify email code.`);
-
+            continue;
         }
         console.log(`Getting account info...`);
         result = await poe.getUserInfo();
         if (!result) {
             console.log(`Failed to get user info.`);
-
+            continue;
         }
         console.log(`Getting quotas...`);
         result = await poe.getQuotas();
         if (!result) {
             console.log(`Failed to get quotas.`);
-
+            continue;
         }
         console.log(`Doing Apple IAP action...`);
         result = await poe.appleIAP();
         if (!result) {
             console.log(`Failed to do Apple IAP action.`);
-
+            continue;
         }
         console.log(`Getting account info...`);
         result = await poe.getUserInfo();
         if (!result) {
             console.log(`Failed to get user info.`);
-
+            continue;
+        }
+        console.log(`Checking subscription...`);
+        if (!result['subscription']['isActive']) {
+            console.log(`Subscription is not active.`);
+            continue;
         }
         console.log(`Logging out...`);
         await poe.logout();
